@@ -17,7 +17,7 @@ public class Customer {
 
     private String lastName;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)//mapped by the Customerfield in CustomerLogs
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)//mapped by the Customerfield in CustomerLogs
     private List<CustomerLog> customerLogs;
 
     @OneToOne

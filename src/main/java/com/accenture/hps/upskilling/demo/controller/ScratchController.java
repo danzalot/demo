@@ -42,11 +42,17 @@ public class ScratchController {
         CustomerLog otherLog = new CustomerLog();
         otherLog.setCustomer(customer);
         customerLogRepository.saveAndFlush(log);
+        customerLogRepository.saveAndFlush(otherLog);
 
         //fetch the same customer
         customer = customerRepository.getOne(customer.getId());//use saved id
-        //fetch all logs for customer
-        customer.getCustomerLogs().forEach(System.out::println);//loop through each log and print
+//        //fetch all logs for customer, when EAGER
+//        customer.getCustomerLogs().forEach(System.out::println);//loop through each log and print
+
+        //fetch all logs for customer, when LAZY
+        //NOTE: see findAllByCustomer in customerLogRepository
+        List<CustomerLog> allByCustomer = customerLogRepository.findAllByCustomer(customer);
+        allByCustomer.stream().forEach(System.err::println); //iterate through the elements of the result list, ALSO dont use system err in production
 
         TestEntity e1 = new TestEntity();
         e1.setName("pol1");
