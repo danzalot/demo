@@ -1,6 +1,7 @@
 package com.accenture.hps.upskilling.demo.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 public class CustomerLog {
@@ -14,6 +15,16 @@ public class CustomerLog {
     private Customer customer;
 
     private String message;
+
+    private LocalDate date;
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     public String getMessage() {
         return message;
