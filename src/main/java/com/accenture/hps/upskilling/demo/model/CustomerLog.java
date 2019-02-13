@@ -22,7 +22,6 @@ public class CustomerLog {
         return date;
     }
 
-    lolololo
 
     public void setDate(LocalDate date) {
         this.date = date;
