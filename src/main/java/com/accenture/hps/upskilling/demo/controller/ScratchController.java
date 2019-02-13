@@ -1,13 +1,16 @@
 package com.accenture.hps.upskilling.demo.controller;
 
+import com.accenture.hps.upskilling.demo.dao.CustomerLogRepository;
 import com.accenture.hps.upskilling.demo.dao.CustomerRepository;
 import com.accenture.hps.upskilling.demo.dao.TestEntityRepository;
 import com.accenture.hps.upskilling.demo.model.Customer;
+import com.accenture.hps.upskilling.demo.model.CustomerLog;
 import com.accenture.hps.upskilling.demo.model.TestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -15,20 +18,35 @@ public class ScratchController {
 
     @Autowired
     CustomerRepository customerRepository;
+
     @Autowired
     TestEntityRepository testEntityRepository;
+
+    @Autowired
+    CustomerLogRepository customerLogRepository;
 
 
     @RequestMapping("/")
     public List<TestEntity>  get(){
-        List<Customer> all = customerRepository.findAll();
-        List<TestEntity> testEntities = testEntityRepository.findAll();
+        List<Customer> all = new ArrayList<>();
+        List<TestEntity> testEntities = new ArrayList<>();
 
         Customer customer = new Customer();
         customer.setFirstName("o");
         customer.setLastName("x");
-        customerRepository.saveAndFlush(customer);
+        customer = customerRepository.saveAndFlush(customer);//set customer to the return value of saveAndFlush to get the id
 
+        //save customer logs
+        CustomerLog log = new CustomerLog();
+        log.setCustomer(customer);
+        CustomerLog otherLog = new CustomerLog();
+        otherLog.setCustomer(customer);
+        customerLogRepository.saveAndFlush(log);
+
+        //fetch the same customer
+        customer = customerRepository.getOne(customer.getId());//use saved id
+        //fetch all logs for customer
+        customer.getCustomerLogs().forEach(System.out::println);//loop through each log and print
 
         TestEntity e1 = new TestEntity();
         e1.setName("pol1");
