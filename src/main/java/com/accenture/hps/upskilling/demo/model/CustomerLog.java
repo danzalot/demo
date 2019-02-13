@@ -13,6 +13,16 @@ public class CustomerLog {
     @JoinColumn(name="customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public Long getId() {
         return id;
     }
