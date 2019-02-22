@@ -1,6 +1,8 @@
 package com.accenture.hps.upskilling.demo.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class Customer {
 
     private String lastName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)//mapped by the Customerfield in CustomerLogs
     private List<CustomerLog> customerLogs;
 

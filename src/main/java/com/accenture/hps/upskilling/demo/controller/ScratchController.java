@@ -7,11 +7,20 @@ import com.accenture.hps.upskilling.demo.model.Customer;
 import com.accenture.hps.upskilling.demo.model.CustomerLog;
 import com.accenture.hps.upskilling.demo.model.TestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class ScratchController {
@@ -25,9 +34,9 @@ public class ScratchController {
     @Autowired
     CustomerLogRepository customerLogRepository;
 
-
-    @RequestMapping("/")
-    public List<TestEntity>  get(){
+    @GetMapping("/")
+    @CrossOrigin("http://localhost:4200")
+    public List<TestEntity> get(){
         List<Customer> all = new ArrayList<>();
         List<TestEntity> testEntities = new ArrayList<>();
 
@@ -36,25 +45,24 @@ public class ScratchController {
         customer.setLastName("x");
         customer = customerRepository.saveAndFlush(customer);//set customer to the return value of saveAndFlush to get the id
 
-        //save customer logs
-        CustomerLog log = new CustomerLog();
-        log.setCustomer(customer);
-        log.setMessage("lololllol");
-        CustomerLog otherLog = new CustomerLog();
-        otherLog.setCustomer(customer);
-        otherLog.setMessage("kekekekekekek");
-        customerLogRepository.saveAndFlush(log);
-        customerLogRepository.saveAndFlush(otherLog);
+        for(int i=0; i< 20; i++){
+           CustomerLog log = new CustomerLog();
+            log.setCustomer(customer);
+            log.setMessage(UUID.randomUUID().toString());
+            log.setDate(LocalDate.now());
+            customerLogRepository.save(log);
+        }
+        customerLogRepository.flush();
 
         //fetch the same customer
         customer = customerRepository.getOne(customer.getId());//use saved id
 //        //fetch all logs for customer, when EAGER
 //        customer.getCustomerLogs().forEach(System.out::println);//loop through each log and print
 
-        //fetch all logs for customer, when LAZY
-        //NOTE: see findAllByCustomer in customerLogRepository
+//        //fetch all logs for customer, when LAZY
+//        //NOTE: see findAllByCustomer in customerLogRepository
         List<CustomerLog> allByCustomer = customerLogRepository.findAllByCustomer(customer);
-        allByCustomer.stream().forEach(custLog->System.err.println(custLog.getMessage())); //iterate through the elements of the result list, ALSO dont use system err in production
+       // allByCustomer.stream().forEach(custLog->System.err.println(custLog.getMessage())); //iterate through the elements of the result list, ALSO dont use system err in production
 
         TestEntity e1 = new TestEntity();
         e1.setName("pol1");

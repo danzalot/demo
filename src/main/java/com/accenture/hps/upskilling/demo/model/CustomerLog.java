@@ -1,5 +1,7 @@
 package com.accenture.hps.upskilling.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -12,6 +14,7 @@ public class CustomerLog {
 
     @ManyToOne
     @JoinColumn(name="customer_id", referencedColumnName = "customer_id")
+    @JsonIgnore
     private Customer customer;
 
     private String message;
